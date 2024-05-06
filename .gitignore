@@ -1,0 +1,4 @@
+activate.bat
+env/
+__pycache__/
+db.sqlite3
