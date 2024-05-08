@@ -18,8 +18,8 @@ class VendorsListViews(APIView):
     def get(self, request):
         vendors = Vendor.objects.all()
         
-        sort_by = request.quary_params.get('sort_by')
-        filter_by = request.quary_params.get('filter_by')
+        sort_by = request.query_params.get('sort_by')
+        filter_by = request.query_params.get('filter_by')
         
         if sort_by:
             vendors = vendors.order_by(sort_by)
@@ -45,16 +45,18 @@ class VendorsListViews(APIView):
 
 
 class VendorViews(APIView):
+    permission_classes = [AllowAny]
     
-    def get(request, pk):
-        vendor = Vendor.objects.get(pk = pk)
+    
+    def get(self, request, pk):
+        vendor = Vendor.objects.get(id = pk)
         if vendor:
             serializer = VendorSerializer(vendor)
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
         
-    def put(request, pk):
+    def put(self, request, pk):
         vendor = Vendor.objects.get(pk = pk)
         if vendor:
             serializer = VendorSerializer(vendor, data = request.data)
@@ -63,7 +65,7 @@ class VendorViews(APIView):
                 return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
     
-    def delete(request, pk):
+    def delete(self, request, pk):
         vendor = Vendor.objects.get(pk = pk)
         if vendor:
             serializer = VendorSerializer(vendor)
